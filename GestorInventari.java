@@ -33,9 +33,9 @@ public class GestorInventari {
     static String codiempresa = "98436387F";
     static String direccioempresa = "Av. de Catalunya 13, Tàrrega, Lleida";
 
-    static String[] arrayproveidors = new String[10];
+    static String[] arrayproveidors = new String[100];
 
-    static int[] arrayproductes = new int[10];
+    static int[] arrayproductes = new int[100];
 
     public static void main(String[] args) {
 
@@ -142,7 +142,7 @@ public class GestorInventari {
         String servidor = "jdbc:mysql://localhost:3306/";
         String bbdd = "empresa";
         String user = "root";
-        String password = "costa2021";
+        String password = "Pardalet12";
         try {
             connexioBD = DriverManager.getConnection(servidor + bbdd, user, password);
             System.out.println("*Connexio amb la base de dades amb èxit*");
@@ -419,62 +419,53 @@ public class GestorInventari {
             String telefon = rs.getString("R.num_telefon");
             String ciutat = rs.getString("ciudad");
 
-            arrayproveidors[contproveidors] = actproveidor;
-
             pw = escriuCapçaleraComanda(nomprov, telefon, ciutat, contproveidors);
 
-            // FileWriter fw = new FileWriter("Files/COMANDES/" + nomprov + "-" +
-            // LocalDate.now() + ".txt", false);
-            // BufferedWriter bw = new BufferedWriter(fw);
-            // PrintWriter pw = new PrintWriter(bw);
+            arrayproveidors[contproveidors] = actproveidor;
 
-            // Metode per escriure la capçalera de cada comanda
-            // escriuCapçaleraComanda(nomprov, telefon, ciutat, contproveidors, fw, bw, pw);
+            contproveidors++;
             do {
                 // comprovar si el proveidor ha canviat
                 if (!actproveidor.equals(rs.getString("P.nif"))) {
-
-                    contproveidors=0;
-
-                    // HA CANVIAT EL PROVEIDOR
-                    // EM GUARDO EL NOU PROVEIDOR
                     actproveidor = rs.getString("P.nif");
                     nomprov = rs.getString("R.nombre");
+                    telefon = rs.getString("R.num_telefon");
+                    ciutat = rs.getString("ciudad");
+
+                    arrayproductes[contproveidors] = contproductes;
+
+                    contproductes = 0;
+
+                    contproveidors++;
+
+                    arrayproveidors[contproveidors] = actproveidor;
 
                     pw.close();
 
-                    // Augmentem el contador de proveidors
-                    contproveidors++;
-
-                    escriuCapçaleraComanda(nomprov, telefon, ciutat, contproveidors);
-
-                    // Augmentem el contador de productes
-                    contproductes++;
-
+                    pw = escriuCapçaleraComanda(nomprov, telefon, ciutat, contproveidors);
 
                 }
+                contproductes++;
                 System.out.println("\nCodi de producte: " + rs.getInt("codi"));
                 System.out.println("Nom: " + rs.getString("nom"));
                 System.out.println("Unitats solicitades: " + (100 - rs.getInt("estoc")));
 
                 pw.println(rs.getInt("codi") + "    " + rs.getString("nom") + "     " + rs.getString("marca")
                         + "   UNITATS: " + (100 - rs.getInt("estoc")));
-                contproductes++;
-                // arrayproductes[contproductes] = productes;
             } while (rs.next());
-
+            arrayproductes[contproveidors] = contproductes;
+            pw.close();
         }
-        pw.close();
 
     }
 
-    static void escriuCapçaleraComanda(String nomprov, String telefon, String ciutat, int contproveidor)
+    static PrintWriter escriuCapçaleraComanda(String nomprov, String telefon, String ciutat, int contproveidor)
             throws IOException {
         // CREEM NOU FITXER
         FileWriter fw = new FileWriter("Files/COMANDES/" + nomprov + "-" +
                 LocalDate.now() + ".txt", false);
-        BufferedWriter bw = new BufferedWriter(fw);
-        PrintWriter pw = new PrintWriter(bw);
+        BufferedWriter bf = new BufferedWriter(fw);
+        PrintWriter pw = new PrintWriter(bf);
 
         // Escrivim la capçalera
         pw.println("***EMPRESA SOLICITANT***");
@@ -485,11 +476,10 @@ public class GestorInventari {
         pw.println(nomprov);
         pw.println("telefon: " + telefon);
         pw.println("direcció: " + ciutat);
-        pw.println("\n***PRODUCTE SOLICITAT***");
+        pw.println("\n***PRODUCTEs SOLICITATS***");
         pw.println("\nCodi/     Nom/        Marca/      Unitats solicitades");
 
-        arrayproveidors[contproveidor] = nomprov;
-        pw.close();
+        return pw;
     }
 
     static void analitzarComandes() {
@@ -500,9 +490,10 @@ public class GestorInventari {
     }
 
     static void visualitzarProductes() {
-        System.out.println("Productes amb menys de 20 unitats d'estoc que han sigut solicitats: ");
+        System.out.println("Proveïdors als que hem solicitat productes: ");
         for (int i = 0; i < arrayproveidors.length; i++) {
-            System.out.println(arrayproveidors[i] + ": " + arrayproductes[i]);
+            System.out.println("Al proveïdor " + arrayproveidors[i] + " li han sigut encomanats " + arrayproductes[i]
+                    + " productes");
         }
     }
 
@@ -517,7 +508,7 @@ public class GestorInventari {
                 prodmax = i;
             }
         }
-        System.out.println(arrayproveidors[prodmax] + "\nunitats: " + max);
+        System.out.println("El proveïdor " + arrayproveidors[prodmax] + " és el més demandat amb "  + max + " unitats.");
     }
 
     static void minProducte() {
@@ -531,7 +522,7 @@ public class GestorInventari {
                 prodmin = i;
             }
         }
-        System.out.println(arrayproveidors[prodmin] + " unitats : " + min);
+        System.out.println("El proveïdor " + arrayproveidors[prodmin] + " és el menys demandat amb: : " + min + " unitats.");
     }
 
     static void mitjanaProducte() {
