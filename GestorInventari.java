@@ -142,7 +142,7 @@ public class GestorInventari {
         String servidor = "jdbc:mysql://localhost:3306/";
         String bbdd = "empresa";
         String user = "root";
-        String password = "Pardalet12";
+        String password = "";
         try {
             connexioBD = DriverManager.getConnection(servidor + bbdd, user, password);
             System.out.println("*Connexio amb la base de dades amb èxit*");
