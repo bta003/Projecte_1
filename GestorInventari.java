@@ -536,7 +536,7 @@ public class GestorInventari {
 
         }
         mitjana = suma / arrayproductes.length;
-        System.out.println("La mitja de productes solicitats per proveidor es de " + mitjana + "productes");
+        System.out.println("La mitja de productes solicitats per proveidor es de " + mitjana + " productes");
     }
 
     static void tancarConnexioBD() throws SQLException {
