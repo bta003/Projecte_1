@@ -142,7 +142,7 @@ public class GestorInventari {
         String servidor = "jdbc:mysql://localhost:3306/";
         String bbdd = "empresa";
         String user = "root";
-        String password = "";
+        String password = "costa2021";
         try {
             connexioBD = DriverManager.getConnection(servidor + bbdd, user, password);
             System.out.println("*Connexio amb la base de dades amb èxit*");
@@ -423,7 +423,7 @@ public class GestorInventari {
  
             arrayproveidors[contproveidors] = actproveidor;
  
-            contproveidors++;
+            // contproveidors++;
             do {
                 // comprovar si el proveidor ha canviat
                 if (!actproveidor.equals(rs.getString("P.nif"))) {
@@ -432,6 +432,8 @@ public class GestorInventari {
                     telefon = rs.getInt("R.num_telefon");
                     ciutat = rs.getString("ciudad");
  
+                    contproveidors = 0;
+
                     arrayproductes[contproveidors] = contproductes;
  
                     contproductes = 0;
@@ -491,7 +493,7 @@ public class GestorInventari {
  
     static void visualitzarProductes() {
         System.out.println("Proveïdors als que hem solicitat productes: ");
-        for (int i = 0; i < arrayproveidors.length; i++) {
+        for (int i = 0;arrayproductes[i] != 0; i++) {
             System.out.println("Al proveïdor " + arrayproveidors[i] + " li han sigut encomanats " + arrayproductes[i]
                     + " productes");
         }
@@ -502,7 +504,9 @@ public class GestorInventari {
         int max = arrayproductes[0];
         int prodmax = 0;
  
-        for (int i = 0; i < arrayproductes.length; i++) {
+        int i;
+
+        for (i = 0; arrayproductes[i] != 0; i++) {
             if (arrayproductes[i] > max) {
                 max = arrayproductes[i];
                 prodmax = i;
@@ -516,13 +520,15 @@ public class GestorInventari {
         int min = arrayproductes[0];
         int prodmin = 0;
  
-        for (int i = 0; i < arrayproductes.length; i++) {
+        int i;
+
+        for (i = 0; arrayproductes[i] != 0; i++) {
             if (arrayproductes[i] < min) {
                 min = arrayproductes[i];
                 prodmin = i;
             }
         }
-        System.out.println("El proveïdor " + arrayproveidors[prodmin] + " és el menys demandat amb: : " + min + " unitats.");
+        System.out.println("El proveïdor " + arrayproveidors[prodmin] + " és el menys demandat amb " + min + " unitats.");
     }
  
     static void mitjanaProducte() {
@@ -531,11 +537,13 @@ public class GestorInventari {
         double mitjana = 0;
         double suma = 0;
  
-        for (int i = 0; i < arrayproductes.length; i++) {
+        int i;
+
+        for (i = 0; arrayproductes[i] != 0; i++) {
             suma += arrayproductes[i];
  
         }
-        mitjana = suma / arrayproductes.length;
+        mitjana = suma / i;
         System.out.println("La mitja de productes solicitats per proveidor es de " + mitjana + "productes");
     }
  
